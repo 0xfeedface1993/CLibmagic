@@ -29,13 +29,14 @@ let package = Package(
             dependencies: [
                 "CLibmagic",
                 .product(name: "Logging", package: "swift-log"),
-            ]),
-        .testTarget(
-            name: "CLibmagicTests",
-            dependencies: ["CLibmagic"]),
+            ],
+            resources: [.process("Resources/Rules")]
+        ),
         .testTarget(
             name: "MagicWrapperTests",
-            dependencies: ["MagicWrapper"]),
+            dependencies: ["MagicWrapper"],
+            resources: [.process("Resources")]
+        ),
     ]
 )
 
