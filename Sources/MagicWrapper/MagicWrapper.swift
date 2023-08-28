@@ -18,6 +18,26 @@ public enum MagicError: Error {
     case invalidDataBaseAddress
 }
 
+public actor MagicActor {
+    private let wrapper = MagicWrapper()
+    private var cached = [Any]()
+    
+    public func file(_ path: URL) throws -> String {
+        cached.append(path)
+        return try wrapper.file(path, flags: .none)
+    }
+    
+    public func file(_ path: URL, flags: MagicWrapper.Flags) throws -> String {
+        cached.append(path)
+        return try wrapper.file(path, flags: flags)
+    }
+    
+    public func file(_ data: Data, flags: MagicWrapper.Flags) throws -> String {
+        cached.append(data.count > 64 ? Data(data.prefix(64)):data)
+        return try wrapper.file(data, flags: flags)
+    }
+}
+
 public final class MagicWrapper {
     private var magic: magic_t?
     
