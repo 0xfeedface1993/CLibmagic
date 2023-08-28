@@ -1,5 +1,9 @@
 # CLibmagic
 
+![Swift5.8+](https://img.shields.io/badge/Swift-5.8%2B-orange.svg?style=flat)
+![platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux-orange.svg?style=flat)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/0xfeedface1993/CLibmagic/blob/master/LICENSE)  
+
 CLibmagic is a Swift library that provides a high-level interface to the `libmagic` library's C API for file type detection. It allows you to determine the MIME type and other information about files based on their content, not relying solely on file extensions.
 
 ## Features
