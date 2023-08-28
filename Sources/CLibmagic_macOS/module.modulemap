@@ -1,0 +1,5 @@
+module CLibmagic [system] {
+    header "/usr/local/opt/libmagic/include/magic.h"
+    link "libmagic"
+    export *
+}
