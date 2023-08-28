@@ -98,11 +98,12 @@ public final class MagicWrapper {
     }
     
     func fileSystemRepresentation(_ url: URL) throws -> UnsafePointer<CChar> {
-        let path = url.withUnsafeFileSystemRepresentation { $0 }
-        guard let path = path else {
-            throw MagicError.invalidFileSystemRepresentation(url)
-        }
-        return path
+//        let path = url.withUnsafeFileSystemRepresentation { $0 }
+//        guard let path = path else {
+//            throw MagicError.invalidFileSystemRepresentation(url)
+//        }
+//        return path
+        (url as NSURL).fileSystemRepresentation
     }
     
     public struct Flags: OptionSet {
