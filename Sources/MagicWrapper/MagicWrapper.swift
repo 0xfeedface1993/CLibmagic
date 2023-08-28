@@ -18,25 +18,25 @@ public enum MagicError: Error {
     case invalidDataBaseAddress
 }
 
-public actor MagicActor {
-    private let wrapper = MagicWrapper()
-    private var cached = [Any]()
-    
-    public func file(_ path: URL) throws -> String {
-        cached.append(path)
-        return try wrapper.file(path, flags: .none)
-    }
-    
-    public func file(_ path: URL, flags: MagicWrapper.Flags) throws -> String {
-        cached.append(path)
-        return try wrapper.file(path, flags: flags)
-    }
-    
-    public func file(_ data: Data, flags: MagicWrapper.Flags) throws -> String {
-        cached.append(data.count > 64 ? Data(data.prefix(64)):data)
-        return try wrapper.file(data, flags: flags)
-    }
-}
+//public actor MagicActor {
+//    private let wrapper = MagicWrapper()
+//    private var cached = [Any]()
+//
+//    public func file(_ path: URL) throws -> String {
+//        cached.append(path)
+//        return try wrapper.file(path, flags: .none)
+//    }
+//
+//    public func file(_ path: URL, flags: MagicWrapper.Flags) throws -> String {
+//        cached.append(path)
+//        return try wrapper.file(path, flags: flags)
+//    }
+//    
+//    public func file(_ data: Data, flags: MagicWrapper.Flags) throws -> String {
+//        cached.append(data.count > 64 ? Data(data.prefix(64)):data)
+//        return try wrapper.file(data, flags: flags)
+//    }
+//}
 
 public final class MagicWrapper {
     private var magic: magic_t?
@@ -45,14 +45,19 @@ public final class MagicWrapper {
         guard let mgcFile = Bundle.module.url(forResource: "magic", withExtension: "mgc") else {
             fatalError("'magic.mgc' is not found in bundle")
         }
-        let path: UnsafePointer<CChar>
+        
         do {
-            path = try fileSystemRepresentation(mgcFile)
+            try mgcFile.withUnsafeFileSystemRepresentation {
+                guard let pointer = $0 else {
+                    throw MagicError.invalidFileSystemRepresentation(mgcFile)
+                }
+                self.magic = magic_open(MAGIC_NONE)
+                magic_load(magic, pointer)
+            }
         } catch {
             fatalError("mgc file read path failed at \(mgcFile)")
         }
-        self.magic = magic_open(MAGIC_NONE)
-        magic_load(magic, path)
+        
     }
     
     deinit {
@@ -72,38 +77,33 @@ public final class MagicWrapper {
             throw MagicError.notFound
         }
         
-        let filePath = try fileSystemRepresentation(path)
-        logger.info("magic_file(\(String(describing: magic)), \(path))")
-        guard let description = magic_file(magic, filePath) else {
-            throw MagicError.unexpected
+        return try path.withUnsafeFileSystemRepresentation {
+            guard let pointer = $0 else {
+                throw MagicError.invalidFileSystemRepresentation(path)
+            }
+            logger.info("magic_file(\(String(describing: magic)), \(path))")
+            guard let description = magic_file(magic, pointer) else {
+                throw MagicError.unexpected
+            }
+            
+            return String(cString: description)
         }
-        
-        return String(cString: description)
     }
     
     public func file(_ data: Data, flags: Flags) throws -> String {
         magic_setflags(magic, flags.rawValue)
         
-        let pointer = data.withUnsafeBytes { $0.baseAddress }
-        guard let pointer = pointer else {
-            throw MagicError.invalidDataBaseAddress
+        return try data.withUnsafeBytes {
+            guard let pointer = $0.baseAddress else {
+                throw MagicError.invalidDataBaseAddress
+            }
+            logger.info("magic_buffer(\(String(describing: magic)), \(data))")
+            guard let description = magic_buffer(magic, pointer, data.count) else {
+                throw MagicError.unexpected
+            }
+            
+            return String(cString: description)
         }
-        
-        logger.info("magic_buffer(\(String(describing: magic)), \(data))")
-        guard let description = magic_buffer(magic, pointer, data.count) else {
-            throw MagicError.unexpected
-        }
-        
-        return String(cString: description)
-    }
-    
-    func fileSystemRepresentation(_ url: URL) throws -> UnsafePointer<CChar> {
-//        let path = url.withUnsafeFileSystemRepresentation { $0 }
-//        guard let path = path else {
-//            throw MagicError.invalidFileSystemRepresentation(url)
-//        }
-//        return path
-        (url as NSURL).fileSystemRepresentation
     }
     
     public struct Flags: OptionSet {
