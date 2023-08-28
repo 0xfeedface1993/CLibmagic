@@ -7,6 +7,9 @@
 
 import Foundation
 import CLibmagic
+import Logging
+
+fileprivate let logger = Logger(label: "com.magic.wrapper")
 
 public enum MagicError: Error {
     case notFound
@@ -48,9 +51,9 @@ public final class MagicWrapper {
             throw MagicError.notFound
         }
         
-        let path = try fileSystemRepresentation(path)
-        
-        guard let description = magic_file(magic, path) else {
+        let filePath = try fileSystemRepresentation(path)
+        logger.info("magic_file(\(String(describing: magic)), \(filePath)")
+        guard let description = magic_file(magic, filePath) else {
             throw MagicError.unexpected
         }
         
