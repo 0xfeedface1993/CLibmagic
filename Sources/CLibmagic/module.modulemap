@@ -1,8 +1,6 @@
 module CLibmagic [system] {
     header "/usr/include/magic.h"
     link "z"
-    link "zma"
-    link "bz2"
     link "magic"
     export *
 }
