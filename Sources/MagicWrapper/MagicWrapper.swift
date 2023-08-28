@@ -52,7 +52,7 @@ public final class MagicWrapper {
         }
         
         let filePath = try fileSystemRepresentation(path)
-        logger.info("magic_file(\(String(describing: magic)), \(filePath)")
+        logger.info("magic_file(\(String(describing: magic)), \(path))")
         guard let description = magic_file(magic, filePath) else {
             throw MagicError.unexpected
         }
