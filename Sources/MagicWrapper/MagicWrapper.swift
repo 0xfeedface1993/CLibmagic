@@ -15,6 +15,7 @@ public enum MagicError: Error {
     case notFound
     case unexpected
     case invalidFileSystemRepresentation(URL)
+    case invalidDataBaseAddress
 }
 
 public final class MagicWrapper {
@@ -47,13 +48,29 @@ public final class MagicWrapper {
     public func file(_ path: URL, flags: Flags) throws -> String {
         magic_setflags(magic, flags.rawValue)
         
-        guard FileManager().fileExists(atPath: path.path) else {
+        guard FileManager.default.fileExists(atPath: path.path) else {
             throw MagicError.notFound
         }
         
         let filePath = try fileSystemRepresentation(path)
         logger.info("magic_file(\(String(describing: magic)), \(path))")
         guard let description = magic_file(magic, filePath) else {
+            throw MagicError.unexpected
+        }
+        
+        return String(cString: description)
+    }
+    
+    public func file(_ data: Data, flags: Flags) throws -> String {
+        magic_setflags(magic, flags.rawValue)
+        
+        let pointer = data.withUnsafeBytes { $0.baseAddress }
+        guard let pointer = pointer else {
+            throw MagicError.invalidDataBaseAddress
+        }
+        
+        logger.info("magic_buffer(\(String(describing: magic)), \(data))")
+        guard let description = magic_buffer(magic, pointer, data.count) else {
             throw MagicError.unexpected
         }
         
