@@ -36,7 +36,6 @@ add it to your package's dependencies:
 ## Usage
 
 ```swift
-import Foundation
 import CLibmagic
 
 do {
@@ -49,6 +48,18 @@ do {
 ```
 
 The `file` function takes a URL to the file you want to detect and a set of `Flags` to control the behavior of the detection. The returned string will contain information about the detected file type.
+
+## magic.mgc
+
+File `Sources/MagicWrapper/Resources/Rules/magic.mgc` come from [file](https://github.com/0xfeedface1993/file.git), you can compile custom mgc file replace default file using those command
+
+The `magic.mgc` file is sourced from the [file](https://github.com/0xfeedface1993/file.git) repository and is located at `Sources/MagicWrapper/Resources/Rules/magic.mgc`. You have the option to compile a custom `.mgc ` file and replace the default file using the following command:
+
+```shell
+file -m path/to/file/magic/Magdir -C
+```
+
+By executing the above command, you can generate your own `magic.mgc` file and replace the existing one with your custom compiled version.
 
 ## Contributing
 
