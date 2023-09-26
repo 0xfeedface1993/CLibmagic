@@ -18,6 +18,11 @@ public enum MagicError: Error {
     case invalidDataBaseAddress
 }
 
+public struct MagicInternalError: Error {
+    public let code: Int32
+    public let description: String
+}
+
 public final class MagicWrapper {
     private var magic: magic_t?
     
@@ -63,7 +68,7 @@ public final class MagicWrapper {
             }
             logger.info("magic_file(\(String(describing: magic)), \(path))")
             guard let description = magic_file(magic, pointer) else {
-                throw MagicError.unexpected
+                throw error()
             }
             
             return String(cString: description)
@@ -79,11 +84,19 @@ public final class MagicWrapper {
             }
             logger.info("magic_buffer(\(String(describing: magic)), \(data))")
             guard let description = magic_buffer(magic, pointer, data.count) else {
-                throw MagicError.unexpected
+                throw error()
             }
-            
             return String(cString: description)
         }
+    }
+    
+    func error() -> Error {
+        let code = magic_errno(magic)
+        if let failure = magic_error(magic) {
+            let string = String(cString: failure)
+            return MagicInternalError(code: code, description: string)
+        }
+        return MagicInternalError(code: code, description: "unexpected")
     }
     
     public struct Flags: OptionSet {
