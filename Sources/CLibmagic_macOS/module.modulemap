@@ -1,5 +1,5 @@
 module CLibmagic [system] {
-    header "/usr/local/opt/libmagic/include/magic.h"
+    header "/usr/local/Cellar/libmagic/5.45/include/magic.h"
     link "z"
     link "zma"
     link "bz2"

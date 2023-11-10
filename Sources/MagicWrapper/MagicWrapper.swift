@@ -26,8 +26,8 @@ public struct MagicInternalError: Error {
 public final class MagicWrapper {
     private var magic: magic_t?
     
-    public init() {
-        guard let mgcFile = Bundle.module.url(forResource: "magic", withExtension: "mgc") else {
+    public init(_ url: URL? = nil) {
+        guard let mgcFile = url ?? Bundle.module.url(forResource: "magic", withExtension: "mgc") else {
             fatalError("'magic.mgc' is not found in bundle")
         }
         
@@ -84,6 +84,25 @@ public final class MagicWrapper {
             }
             logger.info("magic_buffer(\(String(describing: magic)), \(data))")
             guard let description = magic_buffer(magic, pointer, data.count) else {
+                throw error()
+            }
+            return String(cString: description)
+        }
+    }
+    
+    public func fileDescriptoion(_ path: URL, flags: Flags) throws -> String {
+        magic_setflags(magic, flags.rawValue)
+        
+        guard FileManager.default.fileExists(atPath: path.path) else {
+            throw MagicError.notFound
+        }
+        
+        return try path.withUnsafeFileSystemRepresentation {
+            guard let pointer = $0 else {
+                throw MagicError.invalidFileSystemRepresentation(path)
+            }
+            logger.info("magic_file(\(String(describing: magic)), \(path))")
+            guard let description = magic_file(magic, pointer) else {
                 throw error()
             }
             return String(cString: description)
