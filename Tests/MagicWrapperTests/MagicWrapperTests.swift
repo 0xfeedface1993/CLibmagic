@@ -54,11 +54,4 @@ final class MagicWrapperTests: XCTestCase {
     func testCustomMgcFile() async throws {
         let wrapper = MagicWrapper(URL(fileURLWithPath: "/usr/local/Cellar/libmagic/5.45/share/misc/magic"))
     }
-    
-    func testDescription() async throws {
-        let wrapper = MagicWrapper()
-        let png = Bundle.module.url(forResource: "icons8-file-delete-100", withExtension: "png")!
-        let description = try wrapper.fileDescriptoion(png, flags: .none)
-        print("description: \(description)")
-    }
 }

@@ -90,25 +90,6 @@ public final class MagicWrapper {
         }
     }
     
-    public func fileDescriptoion(_ path: URL, flags: Flags) throws -> String {
-        magic_setflags(magic, flags.rawValue)
-        
-        guard FileManager.default.fileExists(atPath: path.path) else {
-            throw MagicError.notFound
-        }
-        
-        return try path.withUnsafeFileSystemRepresentation {
-            guard let pointer = $0 else {
-                throw MagicError.invalidFileSystemRepresentation(path)
-            }
-            logger.info("magic_file(\(String(describing: magic)), \(path))")
-            guard let description = magic_file(magic, pointer) else {
-                throw error()
-            }
-            return String(cString: description)
-        }
-    }
-    
     func error() -> Error {
         let code = magic_errno(magic)
         if let failure = magic_error(magic) {
