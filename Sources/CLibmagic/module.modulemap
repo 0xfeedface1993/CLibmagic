@@ -1,6 +1,4 @@
-module CLibmagic [system] {
-    header "/usr/include/magic.h"
-    link "z"
-    link "magic"
+module CLibmagic {
+    header "magic.h"
     export *
 }

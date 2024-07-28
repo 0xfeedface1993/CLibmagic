@@ -1,0 +1,3 @@
+[submodule "libmagic"]
+	path = Sources/CLibmagic/libmagic
+	url = https://github.com/0xfeedface1993/file.git

@@ -52,6 +52,7 @@ final class MagicWrapperTests: XCTestCase {
     }
     
     func testCustomMgcFile() async throws {
-        let wrapper = MagicWrapper(URL(fileURLWithPath: "/usr/local/Cellar/libmagic/5.45/share/misc/magic"))
+        let url = Bundle.module.url(forResource: "magic", withExtension: "mgc")!
+        let wrapper = MagicWrapper(url)
     }
 }

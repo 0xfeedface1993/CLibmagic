@@ -16,6 +16,7 @@ public enum MagicError: Error {
     case unexpected
     case invalidFileSystemRepresentation(URL)
     case invalidDataBaseAddress
+    case mgcFileNotFound
 }
 
 public struct MagicInternalError: Error {
@@ -32,6 +33,10 @@ public final class MagicWrapper {
         }
         
         do {
+            var isDirectory = ObjCBool(false)
+            guard FileManager.default.fileExists(atPath: mgcFile.path, isDirectory: &isDirectory), !isDirectory.boolValue else {
+                throw MagicError.mgcFileNotFound
+            }
             try mgcFile.withUnsafeFileSystemRepresentation {
                 guard let pointer = $0 else {
                     throw MagicError.invalidFileSystemRepresentation(mgcFile)
@@ -40,7 +45,7 @@ public final class MagicWrapper {
                 magic_load(magic, pointer)
             }
         } catch {
-            fatalError("mgc file read path failed at \(mgcFile)")
+            fatalError("mgc file read path failed at \(mgcFile), \(error)")
         }
         
     }

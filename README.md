@@ -30,7 +30,7 @@ You can include CLibmagic in your Swift project using the Swift Package Manager 
 add it to your package's dependencies:
 
 ```swift
-.package(url: "https://github.com/0xfeedface1993/CLibmagic.git", from: "0.1.0")
+.package(url: "https://github.com/0xfeedface1993/CLibmagic.git", from: "0.2.0")
 ```
 
 ## Usage
