@@ -23,19 +23,63 @@ let coreSources = [
     "libmagic/src/readcdf.c",
     "libmagic/src/funcs.c",
     "libmagic/src/fsmagic.c",
-    "libmagic/src/vasprintf.c",
-    "libmagic/src/asprintf.c",
     "libmagic/src/print.c",
-    "libmagic/src/dprintf.c",
 ]
 
+var missingSources: [String] = []
+
 #if os(Linux)
-let sources = [
-    "libmagic/src/strlcpy.c",
-    "libmagic/src/fmtcheck.c",
-]
-#else
-let sources = [String]()
+#if !HAVE_STRLCPY
+missingSources.append("libmagic/src/strlcpy.c")
+#endif
+
+#if !HAVE_STRLCAT
+missingSources.append("libmagic/src/strlcat.c")
+#endif
+
+#if !HAVE_STRCASESTR
+missingSources.append("libmagic/src/strcasestr.c")
+#endif
+
+#if !HAVE_GETLINE
+missingSources.append("libmagic/src/getline.c")
+#endif
+
+#if !HAVE_CTIME_R
+missingSources.append("libmagic/src/ctime_r.c")
+#endif
+
+#if !HAVE_ASCTIME_R
+missingSources.append("libmagic/src/asctime_r.c")
+#endif
+
+#if !HAVE_GMTIME_R
+missingSources.append("libmagic/src/gmtime_r.c")
+#endif
+
+#if !HAVE_LOCALTIME_R
+missingSources.append("libmagic/src/localtime_r.c")
+#endif
+
+#if !HAVE_FMTCHECK
+missingSources.append("libmagic/src/fmtcheck.c")
+#endif
+
+#if !HAVE_PREAD
+missingSources.append("libmagic/src/pread.c")
+#endif
+#endif
+
+#if !HAVE_VASPRINTF
+missingSources.append("libmagic/src/vasprintf.c")
+#endif
+
+#if !HAVE_ASPRINTF
+missingSources.append("libmagic/src/asprintf.c")
+#endif
+
+#if !HAVE_DPRINTF
+missingSources.append("libmagic/src/dprintf.c")
 #endif
 
 let package = Package(
@@ -62,7 +106,7 @@ let package = Package(
             name: "CLibmagic",
             exclude: [
             ],
-            sources: sources + coreSources,
+            sources: missingSources + coreSources,
             publicHeadersPath: "header",
             cSettings: [
                 .headerSearchPath("header"),
