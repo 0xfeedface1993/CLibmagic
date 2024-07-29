@@ -68,7 +68,7 @@ let package = Package(
                 .headerSearchPath("header"),
                 .define("HAVE_INTTYPES_H", .when(platforms: [.macOS])),
                 .define("HAVE_STDINT_H", .when(platforms: [.macOS])),
-                .define("HAVE_UNISTD_H", .when(platforms: [.macOS])),
+                .define("HAVE_UNISTD_H", .when(platforms: [.macOS, .linux])),
             ],
             linkerSettings: [
                 
