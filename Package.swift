@@ -26,7 +26,6 @@ let package = Package(
         .target(
             name: "CLibmagic",
             exclude: [
-                "libmagic/src/readcdf.c",
             ],
             sources: [
                 "libmagic/src/apptype.c",
@@ -54,7 +53,7 @@ let package = Package(
 //                "header/magic.h",
 //                "header/cdf.h",
                 "libmagic/src/cdf.c",
-                "override/readcdf.c",
+                "libmagic/src/readcdf.c",
                 "libmagic/src/funcs.c",
                 "libmagic/src/fsmagic.c",
                 "libmagic/src/vasprintf.c",
@@ -64,9 +63,8 @@ let package = Package(
             ],
             publicHeadersPath: "header",
             cSettings: [
-                .headerSearchPath("internal"),
                 .headerSearchPath("header"),
-                .define("HAVE_INTTYPES_H", .when(platforms: [.macOS])),
+                .define("HAVE_INTTYPES_H", .when(platforms: [.macOS, .linux])),
                 .define("HAVE_STDINT_H", .when(platforms: [.macOS, .linux])),
                 .define("HAVE_UNISTD_H", .when(platforms: [.macOS, .linux])),
             ],
@@ -96,5 +94,5 @@ let package = Package(
             path: "Sources/Plugins"
         ),
     ],
-    cLanguageStandard: .c99
+    cLanguageStandard: .gnu11
 )

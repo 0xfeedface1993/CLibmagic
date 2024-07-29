@@ -27,7 +27,7 @@
 #ifndef _MAGIC_H
 #define _MAGIC_H
 
-#define VERSION "5.45"
+#define VERSION "19"
 
 #include <sys/types.h>
 
@@ -119,7 +119,7 @@ b\31transp_compression\0\
 #define	MAGIC_NO_CHECK_FORTRAN	0x000000 /* Don't check ascii/fortran */
 #define	MAGIC_NO_CHECK_TROFF	0x000000 /* Don't check ascii/troff */
 
-#define MAGIC_VERSION		5.45	/* This implementation */
+#define MAGIC_VERSION		545	/* This implementation */
 
 
 #ifdef __cplusplus
