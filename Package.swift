@@ -3,6 +3,41 @@
 
 import PackageDescription
 
+let coreSources = [
+    "libmagic/src/apptype.c",
+    "libmagic/src/ascmagic.c",
+    "libmagic/src/apprentice.c",
+    "libmagic/src/buffer.c",
+    "libmagic/src/compress.c",
+    "libmagic/src/der.c",
+    "libmagic/src/encoding.c",
+    "libmagic/src/is_csv.c",
+    "libmagic/src/is_json.c",
+    "libmagic/src/is_simh.c",
+    "libmagic/src/is_tar.c",
+    "libmagic/src/magic.c",
+    "libmagic/src/readelf.c",
+    "libmagic/src/softmagic.c",
+    "libmagic/src/cdf_time.c",
+    "libmagic/src/cdf.c",
+    "libmagic/src/readcdf.c",
+    "libmagic/src/funcs.c",
+    "libmagic/src/fsmagic.c",
+    "libmagic/src/vasprintf.c",
+    "libmagic/src/asprintf.c",
+    "libmagic/src/print.c",
+    "libmagic/src/dprintf.c",
+]
+
+#if os(Linux)
+let sources = [
+    "libmagic/src/strlcpy.c",
+    "libmagic/src/fmtcheck.c",
+]
+#else
+let sources = [String]()
+#endif
+
 let package = Package(
     name: "CLibmagic",
     platforms: [
@@ -27,40 +62,7 @@ let package = Package(
             name: "CLibmagic",
             exclude: [
             ],
-            sources: [
-                "libmagic/src/apptype.c",
-                "libmagic/src/ascmagic.c",
-                "libmagic/src/apprentice.c",
-                "libmagic/src/buffer.c",
-                "libmagic/src/compress.c",
-                "libmagic/src/der.c",
-//                "libmagic/src/der.h",
-                "libmagic/src/encoding.c",
-//                "libmagic/src/file_opts.h",
-//                "libmagic/src/file.h",
-                "libmagic/src/is_csv.c",
-                "libmagic/src/is_json.c",
-                "libmagic/src/is_simh.c",
-                "libmagic/src/is_tar.c",
-                "libmagic/src/magic.c",
-//                "libmagic/src/mygetopt.h",
-//                "libmagic/src/readcdf.c",
-                "libmagic/src/readelf.c",
-//                "libmagic/src/readelf.h",
-                "libmagic/src/softmagic.c",
-//                "libmagic/src/tar.h",
-                "libmagic/src/cdf_time.c",
-//                "header/magic.h",
-//                "header/cdf.h",
-                "libmagic/src/cdf.c",
-                "libmagic/src/readcdf.c",
-                "libmagic/src/funcs.c",
-                "libmagic/src/fsmagic.c",
-                "libmagic/src/vasprintf.c",
-                "libmagic/src/asprintf.c",
-                "libmagic/src/print.c",
-                "libmagic/src/dprintf.c",
-            ],
+            sources: sources + coreSources,
             publicHeadersPath: "header",
             cSettings: [
                 .headerSearchPath("header"),
