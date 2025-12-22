@@ -110,9 +110,9 @@ let package = Package(
             publicHeadersPath: "header",
             cSettings: [
                 .headerSearchPath("header"),
-                .define("HAVE_INTTYPES_H", .when(platforms: [.macOS, .linux])),
-                .define("HAVE_STDINT_H", .when(platforms: [.macOS, .linux])),
-                .define("HAVE_UNISTD_H", .when(platforms: [.macOS, .linux])),
+                .define("HAVE_INTTYPES_H", .when(platforms: [.macOS, .iOS, .linux])),
+                .define("HAVE_STDINT_H", .when(platforms: [.macOS, .iOS, .linux])),
+                .define("HAVE_UNISTD_H", .when(platforms: [.macOS, .iOS, .linux])),
             ],
             linkerSettings: [
                 

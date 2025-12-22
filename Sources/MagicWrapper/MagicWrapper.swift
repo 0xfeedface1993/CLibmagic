@@ -71,7 +71,6 @@ public final class MagicWrapper {
             guard let pointer = $0 else {
                 throw MagicError.invalidFileSystemRepresentation(path)
             }
-            logger.info("magic_file(\(String(describing: magic)), \(path))")
             guard let description = magic_file(magic, pointer) else {
                 throw error()
             }
@@ -87,7 +86,6 @@ public final class MagicWrapper {
             guard let pointer = $0.baseAddress else {
                 throw MagicError.invalidDataBaseAddress
             }
-            logger.info("magic_buffer(\(String(describing: magic)), \(data))")
             guard let description = magic_buffer(magic, pointer, data.count) else {
                 throw error()
             }
